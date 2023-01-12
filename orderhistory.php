@@ -76,8 +76,34 @@
             }else
             {
                 echo '<div class="content-box">
-                        <p>Order History</p><br>';
+                        <p>Order History
+                        <select style="padding:5px;margin-bottom: 25px;border: 2px solid #ff531a;float:right;" name="sortstatus" id="sortstatus" onchange="sort(this)";>
+                            <option value="" disabled="" selected="">Select Filter</option>
+                            <option value="Paid">Paid Order</option>
+                            <option value="Unpaid">Unpaid Order</option>
+                            <option value="All">All Order</option>
+                        </select>
+                        </p><br>';
+            ?>
+                        <script type="text/javascript">
+                        function sort(answer){
+                            if(answer.value == "All")
+                            window.location="orderhistory.php";
+                            else
+                            window.location="orderhistory.php?request="+answer.value; 
+                        }
 
+                        </script>
+            <?php
+            if(isset($_GET['request']))
+            {
+                $value = $_GET['request'];
+                if($value == "Paid")
+                    $sql = "SELECT id, _date, _time, grand_total, merchandise_total,_status FROM saleorder WHERE userid = '$userid' AND _status =1";
+                else
+                    $sql = "SELECT id, _date, _time, grand_total, merchandise_total,_status FROM saleorder WHERE userid = '$userid' AND _status =0";
+            }
+            else
                 $sql = "SELECT id, _date, _time, grand_total, merchandise_total,_status FROM saleorder WHERE userid = '$userid'";
                 $isFound = mysqli_query($conn,$sql); 
 

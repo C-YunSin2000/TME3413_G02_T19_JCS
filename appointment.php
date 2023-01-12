@@ -267,9 +267,32 @@
             <div class="col-div-10">
                 <div class="box-10">
                         <div class="content-box">
-                    <p>All Appointment Details</p>
+                    <p>All Appointment Details
+                        <select style="padding:5px;margin-bottom: 25px;border: 2px solid #ff531a;float:right;" name="sortstatus" id="sortstatus" onchange="sort(this)";>
+                            <option value="" disabled="" selected="">Select Filter</option>
+                            <option value="Upcoming">Upcoming Appointment</option>
+                            <option value="Completed">Completed Appointment</option>
+                            <option value="Cancelled">Cancelled Appointment</option>
+                            <option value="All">All Appointment</option>
+                        </select>
+                    </p>
+                    <script type="text/javascript">
+                    function sort(answer){
+                        if(answer.value == "All")
+                        window.location="appointment.php";
+                        else
+                        window.location="appointment.php?request="+answer.value; 
+                    }
+
+                    </script>
                         <br/>
                     <?php
+                        if(isset($_GET['request']))
+                        { 
+                        $value = $_GET['request'];
+                        $query = "SELECT appointment.id,appointment.appointmentdate,appointment.appointmenttime,appointment.addtionalinformation,appointment.status,service.servicename FROM (appointment  INNER JOIN service ON service.id = appointment.serviceid)WHERE userid = $userid AND status ='$value' ORDER BY appointment.appointmentdate DESC;";
+                        }
+                        else
                         $query = "SELECT appointment.id,appointment.appointmentdate,appointment.appointmenttime,appointment.addtionalinformation,appointment.status,service.servicename FROM (appointment  INNER JOIN service ON service.id = appointment.serviceid)WHERE userid = $userid ORDER BY appointment.appointmentdate DESC;";
                         $result2 = mysqli_query($conn,$query);
                         if(mysqli_num_rows($result2)>0){
