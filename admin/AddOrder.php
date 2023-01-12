@@ -1,10 +1,13 @@
-<?php include "../connection.php";ob_start();?>
+<?php include "../connection.php";ob_start();session_start();?>
 <?php 
 
 include "connection.php";
 
 $userID_error = $productID_error = $transDate_error = $transTime_error = $shippingfee_error = $merchandiseTotal_error = $totalPrice_error = $shippingOption_error =$quantity_error= null;
 $userID = $productID = $transDate = $transTime = $shippingfee = $merchandiseTotal = $totalPrice = $shippingOption =$Quantity= null;
+
+if(!isset($_SESSION['adminEmail']))
+header("Location: adminLogin.php");
 
 if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit']))
 {
@@ -219,15 +222,15 @@ ob_end_flush();
 		<input id="status" type="radio" name="shippingOption" value="SelfCollection" <?php if (isset($_POST["shippingOption"]) && $_POST["shippingOption"]=="SelfCollection") echo "checked";?> style="font-size:20px; margin-left: 50px;" ><label for="collect" style="font-size:25px;">Self-Collection</label>
         <span style="color : red; font-size: 24px;"><?php if(isset($shippingOption_error)) echo $shippingOption_error; ?></span>
     </div></br>
-        <div>
-            <label style="padding-right: 3.0%" for="transDate">Transaction Date</label>
-            <input type="date" name="transDate" value="<?php echo $transDate?>">
+        <div style="padding-right: 10.4%;"> 
+            <label style="padding-right: 1.5%" for="transDate">Transaction Date</label>
+            <input style="padding:10px;" type="date" name="transDate" value="<?php echo $transDate?>">
             <span style="color : red; font-size: 24px;"><?php if(isset($transDate_error)) echo $transDate_error; ?></span>
         </div>
         <br/>
-        <div>
-            <label style="padding-right: 3.0%" for="transTime">Transaction Time</label>
-            <input type="time" name="transTime" value="<?php echo $transTime?>">
+        <div style="padding-right: 11.5%;">
+            <label style="padding-right: 1.0%" for="transTime">Transaction Time</label>
+            <input style="padding:10px;" type="time" name="transTime" value="<?php echo $transTime?>">
             <span style="color : red; font-size: 24px;"><?php if(isset($transTime_error)) echo $transTime_error; ?></span>
         </div>
         </br></br></br>

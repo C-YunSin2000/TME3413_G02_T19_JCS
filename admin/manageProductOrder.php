@@ -1,5 +1,9 @@
-<?php include "connection.php";?>
-<?php include "../connection.php";?>
+<?php include "connection.php";session_start();?>
+<?php include "../connection.php";
+
+if(!isset($_SESSION['adminEmail']))
+header("Location: adminLogin.php");
+?>
 
 <html>
 <head>
@@ -33,6 +37,28 @@
 	</div>
 
     <?php
+    if(isset($_GET['request']))
+    { 
+      $value = $_GET['request'];
+      if($value == "ASC" || $value == "DESC")
+        $sql = "SELECT * FROM saleorder ORDER BY _date ".$value ;
+      else
+      {
+        if($value == "Pending")
+        {  
+          $findstatus= 0; $SOption="SelfCollection";
+        }else if($value == "PickUp")
+        {
+          $findstatus= 1; $SOption="SelfCollection";
+        }else if($value == "CourierService")
+        {
+          $findstatus= 1; $SOption="StandaryDelivery";
+        }
+        $sql = "SELECT * FROM saleorder WHERE _status ='$findstatus' AND ShippingOption = '$SOption'";  
+      }
+      
+    }
+    else
       $sql = "SELECT * FROM saleorder";
       $result = $conn->query($sql) ;
     ?>
@@ -49,6 +75,26 @@
       </form>
     </div>
 
+    <div id="filters" style="float:right;">
+      <select style="padding:5px;margin-bottom: 25px;border: 2px solid #ff531a;" name="sortstatus" id="sortstatus" onchange="sort(this)";>
+        <option value="" disabled="" selected="">Select Filter</option>
+        <option value="Pending">Pending Order</option>
+        <option value="PickUp">Picked Up Order</option>
+        <option value="CourierService">Courier Service Order</option>
+        <option value="ASC">Sort By Date (Ascending) </option>
+        <option value="DESC">Sort By Date (Descending) </option>
+        <option value="All">All Order</option>
+      </select>
+    </div>
+    <script type="text/javascript">
+      function sort(answer){
+        if(answer.value == "All")
+          window.location="manageProductOrder.php";
+        else
+          window.location="manageProductOrder.php?request="+answer.value; 
+      }
+
+    </script>
     <table style="width:115%">
     <tr>
         <th>Order ID</th>

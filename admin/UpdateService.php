@@ -1,5 +1,8 @@
-<?php include "../connection.php";ob_start();?>
+<?php include "../connection.php";ob_start();session_start();?>
 <?php
+
+if(!isset($_SESSION['adminEmail']))
+header("Location: adminLogin.php");
 
 include "connection.php";
 
@@ -72,8 +75,26 @@ include "connection.php";
                 }
             }else
             {
-                header("refresh:0;url=services.php"); 
-                echo '<script type="text/javascript">alert("No Image have been chosen!!!");</script>';
+                $query1 = "SELECT * FROM service WHERE id='$id'";
+                $result1 = mysqli_query($conn,$query1);
+
+                if($result1){
+                    $query = "UPDATE service SET servicename='$name', servicedetail='$details', price='$price' WHERE id='$id'";
+                    $run = mysqli_query($conn, $query);
+
+                    if($run)
+                    {
+                        $_SESSION['success'] = "Data updated successfully";
+                        header('Location: services.php');
+                    }
+                    else
+                    {
+                        $_SESSION['status'] = "Data failed to be updated ";
+                        header('Location: services.php');
+                    }
+                }
             }
-        } ob_end_flush();
+        } 
+        
+        ob_end_flush();
 ?>

@@ -1,4 +1,4 @@
-<?php include "../connection.php";ob_start();?>
+<?php include "../connection.php";ob_start();session_start();?>
 
 <?php 
 
@@ -6,6 +6,9 @@ include "connection.php";
 
 $name_error = $detail_error = $price_error = $stock_error = null;
 $name = $detail = $price = $stock = null;
+
+if(!isset($_SESSION['adminEmail']))
+header("Location: adminLogin.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     $name = $_POST['servicename'];

@@ -1,5 +1,8 @@
-<?php include "../connection.php";?>
+<?php include "../connection.php";session_start();?>
 <?php include "connection.php";
+
+if(!isset($_SESSION['adminEmail']))
+header("Location: adminLogin.php");
 
 function display_totalAppt()
 {

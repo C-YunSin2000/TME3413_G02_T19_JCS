@@ -1,7 +1,10 @@
-<?php include "../connection.php";?>
+<?php include "../connection.php";session_start();?>
 <?php 
 
 include "connection.php";
+
+if(!isset($_SESSION['adminEmail']))
+header("Location: adminLogin.php");
 
 if(isset($_POST['editProduct']))
     {
@@ -53,7 +56,7 @@ if(isset($_POST['editProduct']))
     <?php if(isset($_GET['error'])){ ?>
         <h4 style="color:red;"><?php echo $_GET['error']; ?> </h4>
     <?php }?>
-    <form action="UpdateProduct.php" method="POST" enctype="multipart/form-data">  
+    <form action="UpdateProduct.php" method="POST" enctype="multipart/form-data" style="padding-left:15%;">  
         <input type="hidden" name="id" value="<?php echo $row['id'] ?>">
         <div>
             <label style="padding-right: 1.5%;" for="name">Name</label>
@@ -77,16 +80,21 @@ if(isset($_POST['editProduct']))
         </div>
         <br/>
         <div>
-            <label for="image">Please upload an image of the item</label>
-            <input type="file" name="image" value="<?php echo $row['productpic'] ?>"></input>
+            <img src="<?php echo $row['productpic'] ?>" style="width:300px;"alt="">
         </div>
         <br/>
         <div>
-            <button type="submit" class="generateBtn" name="updateProduct">Update</button>
+            <label for="image">Please upload an image if you want to update it!</label><br><br>
+            <input type="file" name="image" ></input>
+        </div>
+        <br/>
+        
+        <div>
+            <button style="margin-top:0;margin-bottom:0;width:47%;" type="submit" class="generateBtn" name="updateProduct">Update</button>
         </div>
     </form>
     <form action="product.php">
-        <button type="submit" name="return" class="generateBtn" onclick="return confirm('Are You Sure You Want To Return?')">Cancel</button>
+        <button style="margin-top:0;margin-bottom:0;margin-left:15%;"  type="submit" name="return" class="generateBtn" onclick="return confirm('Are You Sure You Want To Return?')">Cancel</button>
     </form>
 </div>
     
@@ -104,8 +112,8 @@ if(isset($_POST['editProduct']))
 
             <div class="FFooterBlocks">
                     <ul>
-                      <li><img src="Pictures/wechat.png" alt="wechat">siew2249</li>
-                      <li><a href="https://www.facebook.com/jacquelinengosaloon?mibextid=ZbWKwL" ><img src="Pictures/facebook.png" alt="facebook">Jacqueline Ngo</a></li>
+                      <li><img src="../Pictures/wechat.png" alt="wechat">siew2249</li>
+                      <li><a href="https://www.facebook.com/jacquelinengosaloon?mibextid=ZbWKwL" ><img src="../Pictures/facebook.png" alt="facebook">Jacqueline Ngo</a></li>
                     </ul>
             </div>
 

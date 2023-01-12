@@ -1,10 +1,13 @@
-<?php include "../connection.php";ob_start();?>
+<?php include "../connection.php";ob_start();session_start();?>
 <?php 
 
 include "connection.php";
 
 $userID_error = $serviceID_error = $addInfo_error =  $appointmentDate_error = $appointmentTime_error = null;
 $userID = $serviceID = $addInfo = $appointmentDate = $appointmentTime = null;
+
+if(!isset($_SESSION['adminEmail']))
+header("Location: adminLogin.php");
 
 if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit']))
 {
@@ -143,15 +146,15 @@ ob_end_flush();
             <span style="color : red; font-size: 24px;"><?php if(isset($addInfo_error)) echo $addInfo_error; ?></span>
         </div>
         <br/>
-        <div class="row">
-            <label for="appointmentDate" >Appointment Date</label>
-            <input type="date" name="appointmentDate">
+        <div class="row" style="padding-right: 13.4%;">
+            <label style="padding-right: 1.5%;"  for="appointmentDate" >Appointment Date</label>
+            <input style="padding:10px;padding-right: 2.4%;" type="date" name="appointmentDate">
             <span style="color : red; font-size: 24px;"> <br> <?php if(isset($appointmentDate_error)) echo $appointmentDate_error; ?> </span>
         </div>
         <br>
-        <div>
-            <label for="appointmentTime">Appointment Time</label>
-            <select id="time" name="appointmentTime">
+        <div style="padding-right: 13.4%;">
+            <label style="padding-right: 1.5%;" for="appointmentTime">Appointment Time</label>
+            <select style="padding:10px;padding-right: 6.4%;" id="time" name="appointmentTime">
                 <option value="09:00:00">9:00 am</option>
                 <option value="10:00:00">10:00 am</option>
                 <option value="11:00:00">11:00 am</option>

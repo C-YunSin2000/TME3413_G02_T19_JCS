@@ -1,5 +1,9 @@
-<?php include "../connection.php";?>
+<?php include "../connection.php";session_start();?>
 <?php include "connection.php";
+
+if(!isset($_SESSION['adminEmail']))
+header("Location: adminLogin.php");
+
 ?>
 
 <html>
@@ -11,7 +15,7 @@
         <link rel="stylesheet" href="../CSS/footer.css">
         <script src="slides.js"></script>
     </head>
-
+    
 <body>
  <header class="header-border">
     <div class="header-content">
@@ -45,6 +49,27 @@
       </form>
     </div>
 
+    <div id="filters" style="float:right;">
+      <select style="padding:5px;margin-bottom: 25px;border: 2px solid #ff531a;" name="sortstatus" id="sortstatus" onchange="sort(this)";>
+        <option value="" disabled="" selected="">Select Filter</option>
+        <option value="Upcoming">Upcoming Appointment</option>
+        <option value="Completed">Completed Appointment</option>
+        <option value="Cancelled">Cancelled Appointment</option>
+        <option value="ASC">Sort By Date (Ascending) </option>
+        <option value="DESC">Sort By Date (Descending) </option>
+        <option value="All">All Appointment</option>
+      </select>
+    </div>
+    <script type="text/javascript">
+      function sort(answer){
+        if(answer.value == "All")
+          window.location="manageServiceAppointment.php";
+        else
+        window.location="manageServiceAppointment.php?request="+answer.value; 
+      }
+
+    </script>
+    
   
     <table style="width:115%">
     <tr>
@@ -60,7 +85,17 @@
       </tr>
 
       <?php
+      if(isset($_GET['request']))
+      { 
+        $value = $_GET['request'];
+        if($value=="Upcoming" || $value=="Completed" || $value=="Cancelled")
+          $sql = "SELECT * FROM appointment WHERE status ='$value'";
+        else
+          $sql = "SELECT * FROM appointment ORDER BY appointmentdate ".$value ;
+      }
+      else
             $sql = "SELECT * FROM appointment";
+
             $result = $conn->query($sql) ;
             if ($result->num_rows > 0) 
             {

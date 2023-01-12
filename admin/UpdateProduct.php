@@ -1,5 +1,8 @@
-<?php include "../connection.php";ob_start();?>
+<?php include "../connection.php";ob_start();session_start();?>
 <?php
+
+if(!isset($_SESSION['adminEmail']))
+header("Location: adminLogin.php");
 
 include "connection.php";
 
@@ -76,9 +79,24 @@ if(isset($_SESSION['status']) && $_SESSION['status'] !='')
             }else
             {
                 
-                header("refresh:0;url=product.php"); 
-                echo '<script type="text/javascript">alert("No Image have been chosen!!!");</script>';
-                
+                $query1 = "SELECT * FROM product WHERE id='$id'";
+                $result1 = mysqli_query($conn,$query1);
+
+                if($result1){
+                $query = "UPDATE product SET  productname='$name', productdetail='$details', price='$price', stock='$stock' WHERE id='$id'";
+                $run = mysqli_query($conn, $query);
+
+                if($run)
+                {
+                    $_SESSION['success'] = "Data updated successfully";
+                    header('Location: product.php');
+                }
+                else
+                {
+                    $_SESSION['status'] = "Data failed to be updated";
+                    header('Location: product.php');
+                }
+               }
             }
         } ob_end_flush();
 ?>

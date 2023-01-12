@@ -1,5 +1,8 @@
-<?php include "../connection.php";?>
+<?php include "../connection.php";session_start();?>
 <?php include "connection.php";
+
+if(!isset($_SESSION['adminEmail']))
+header("Location: adminLogin.php");
 
 function display_month()
 {
@@ -137,7 +140,7 @@ function display_month()
     </form>
 
       <a href="reportPage.php"><button>Monthly Services Appointments</button></a>
-      <button><a href="reportPageMonthlyOrders.php">Monthly Products Orders</button></a>
+      <button style="border: 5px solid #e6ff00;"><a href="reportPageMonthlyOrders.php">Monthly Products Orders</button></a>
     </div>
   
 

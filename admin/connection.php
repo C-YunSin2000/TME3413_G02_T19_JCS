@@ -1,8 +1,8 @@
 <?php
-    $servername = "localhost";
-    $username = "id20115517_jcsadmin";
-    $password = "Jcs@12345678";
-	$dbname = "id20115517_jcs";
+	$servername = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "JCS";
 
 	//Create connection
 	$connection = mysqli_connect($servername, $username, $password, $dbname);
@@ -12,7 +12,14 @@
 		die("Connection failed: " . mysqli_connect_error());
 	}
 	
+    // Create Database
+	$sql = "CREATE DATABASE IF NOT EXISTS JCS";
 
+	if (mysqli_query($connection, $sql)) {
+		$connection->select_db('JCS');
+	} else {
+		echo "Error creating database: " . mysqli_error($connection);
+	}
 
 	// Create Table Admin
 	$sqlAdmin = "CREATE TABLE IF NOT EXISTS admin(

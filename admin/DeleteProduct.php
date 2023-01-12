@@ -1,7 +1,10 @@
-<?php include "../connection.php";ob_start();?>
+<?php include "../connection.php";ob_start();session_start();?>
 <?php
 
 include "connection.php";
+
+if(!isset($_SESSION['adminEmail']))
+header("Location: adminLogin.php");
 
 if(isset($_SESSION['success']) && $_SESSION['success'] !='')
     {

@@ -1,7 +1,10 @@
-<?php include "../connection.php";?>
+<?php include "../connection.php";session_start();?>
 <?php 
 
 include "connection.php";
+
+if(!isset($_SESSION['adminEmail']))
+header("Location: adminLogin.php");
 
 if(isset($_POST['editService']))
     {
@@ -53,7 +56,7 @@ if(isset($_POST['editService']))
     <?php if(isset($_GET['error'])){ ?>
         <h4 style="color:red;"><?php echo $_GET['error']; ?> </h4>
     <?php }?>
-    <form action="UpdateService.php" method="POST" enctype="multipart/form-data">  
+    <form action="UpdateService.php" method="POST" enctype="multipart/form-data" style="padding-left:15%;">  
         <input type="hidden" name="id" value="<?php echo $row['id'] ?>">
         <div>
             <label style="padding-right: 1.5%;" for="name">Name</label>
@@ -71,16 +74,20 @@ if(isset($_POST['editService']))
         </div>
         <br/>
         <div>
-            <label for="image">Please upload an image of the item</label>
-            <input type="file"  name="image" value="<?php echo $row['servicepic'] ?>"></input>
+            <img src="<?php echo $row['servicepic'] ?>" style="width:300px;"alt="">
         </div>
         <br/>
         <div>
-            <button type="submit" class="generateBtn" name="updateService">Update</button>
+            <label for="image">Please upload an image if you want to update it!</label><br><br>
+            <input type="file"  name="image" ></input>
+        </div>
+        <br/>
+        <div>
+            <button style="margin-top:0;margin-bottom:0;width:47%;" type="submit" class="generateBtn" name="updateService">Update</button>
         </div>
     </form>
     <form action="services.php">
-        <button type="submit" name="return" class="generateBtn" onclick="return confirm('Are You Sure You Want To Return?')">Cancel</button>
+        <button style="margin-top:0;margin-bottom:0;margin-left:15%;" type="submit" name="return" class="generateBtn" onclick="return confirm('Are You Sure You Want To Return?')">Cancel</button>
     </form>
 </div>
     

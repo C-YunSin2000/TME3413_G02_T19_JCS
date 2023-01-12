@@ -1,7 +1,10 @@
-<?php include "../connection.php";ob_start();?>
+<?php include "../connection.php";ob_start();session_start();?>
 <?php 
 
 include "connection.php";
+
+if(!isset($_SESSION['adminEmail']))
+header("Location: adminLogin.php");
 
 $id = $_GET['id'];
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
@@ -132,7 +135,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
             $row2 = mysqli_fetch_assoc($result2);
             $customername = $row2['firstname'] . " " . $row2['lastname']; 
         ?>
-            <label style="padding-right: 1.5%;" for="name">Customer Name</label>
+            <label style="padding-right: 2.5%;padding-left:8%;" for="name">Customer Name</label>
             <input type="text" style="padding: 12px 20px" rows="2" cols="40" id="customername" name="customername"  value="<?php echo $customername?>" readonly>
         </div>
         <br/>
@@ -145,7 +148,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
             $row3 = mysqli_fetch_assoc($result3);
             $servicename = $row3['servicename']; 
         ?>
-            <label style="padding-right: 1.5%;" for="name">Service</label>
+            <label style="padding-right: 2.5%;padding-left:21%;" for="name">Service</label>
             <select id="service" name="service" style="padding: 12px 20px">
                 <option value="<?php echo $row['serviceid'] ?>">Current service: <?php echo $servicename ?></option>
                 <option value="1">Haircut</option>
@@ -161,7 +164,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         </div>
         <br/>
         <div>
-            <label style="padding-right: 1.5%;" for="details">Appointment Time</label>
+            <label style="padding-right: 1.5%;padding-left:10%;" for="details">Appointment Time</label>
 
             <select id="time" name="time" style="padding: 12px 20px">
                 <option value="<?php echo $row['appointmenttime'] ?>">Current appointment time: <?php echo $row['appointmenttime'] ?></option>
@@ -178,7 +181,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         </div>
         <br/>
         <div>
-            <label style="padding-right: 1.5%;" for="name">Status</label>
+            <label style="padding-right: 1.5%;padding-left:40%;" for="name">Status</label>
             <input id="status" type="radio" name="status" value="Upcoming" <?php if ($row['status'] =="Upcoming") echo "checked";?>><label for="upcoming" style="font-size:25px;">Upcoming</label>
             <input id="status" type="radio" name="status" value="Completed" <?php if ($row['status'] =="Completed") echo "checked";?>><label for="completed" style="font-size:25px;">Completed</label>
             <input id="status" type="radio" name="status" value="Cancelled" <?php if ($row['status'] =="Cancelled") echo "checked";?>><label for="cancelled" style="font-size:25px;">Cancelled</label>
@@ -187,11 +190,11 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         
         <br/>
         <div>
-            <button type="submit" class="generateBtn" name="updateService">Update</button>
+            <button style="margin-top:0;margin-bottom:0;margin-left:15%;" type="submit" class="generateBtn" name="updateService">Update</button>
         </div>
     </form>
     <form action="manageServiceAppointment.php">
-        <button type="submit" name="return" class="generateBtn" onclick="return confirm('Are You Sure You Want To Return?')">Cancel</button>
+        <button style="margin-top:0;margin-bottom:0;margin-left:15%;" type="submit" name="return" class="generateBtn" onclick="return confirm('Are You Sure You Want To Return?')">Cancel</button>
     </form>
 </div>
     
@@ -209,8 +212,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
             <div class="FFooterBlocks">
                     <ul>
-                      <li><img src="Pictures/wechat.png" alt="wechat">siew2249</li>
-                      <li><a href="https://www.facebook.com/jacquelinengosaloon?mibextid=ZbWKwL" ><img src="Pictures/facebook.png" alt="facebook">Jacqueline Ngo</a></li>
+                      <li><img src="../Pictures/wechat.png" alt="wechat">siew2249</li>
+                      <li><a href="https://www.facebook.com/jacquelinengosaloon?mibextid=ZbWKwL" ><img src="../Pictures/facebook.png" alt="facebook">Jacqueline Ngo</a></li>
                     </ul>
             </div>
 
