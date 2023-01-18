@@ -41,11 +41,29 @@
                 $service_id = $_POST["service_id"];
                 $service_name = $_POST["service_name"];
                 $appointmentdate= $_POST['date'];
+
+                //Validate date, is it thursday? (off day)
+                $timestamp = strtotime($appointmentdate);
+                $day = date('D', $timestamp);
+
                 $appointmenttime= $_POST['time'];
                 $addtionalinformation=$_POST['addtionalinformation'];
+                
     
-                if (empty($appointmentdate)) $DateE= "*Appointment Date is required!";  else $DateE= "";
-                if (empty($appointmenttime)) $TimeE= "*Appointment Date is required!";  else $TimeE= "";
+                if (empty($appointmentdate)) 
+                {
+                    $DateE= "*Appointment Date is required!"; 
+                }
+                else if($day === 'Thu')
+                {
+                    $DateE= "Thrusday is our Regular OFF DAY! Please select other date!";
+                }
+                else 
+                {
+                    $DateE= "";
+                }
+
+                if (empty($appointmenttime)) $TimeE= "*Appointment TIme is required!";  else $TimeE= "";
                 if (empty($addtionalinformation)) $AddInfoE = "*Additional Information is required!";  else  $AddInfoE= "";
 
                 If(empty($DateE) && empty($TimeE) && empty($AddInfoE))
@@ -200,7 +218,7 @@
                              <label for="date" >Date</label>
                          </div>
                          <div class="col2">
-                             <input type="date" name="date">
+                             <input type="date" name="date" min="<?= date('Y-m-d'); ?>">
                              <span class="error"> <br> <?php if (isset($_GET['DateE']))echo $_GET['DateE']; ?> </span>
                          </div>
                      </div>
