@@ -15,6 +15,11 @@ header("Location: adminLogin.php");
         <script src="slides.js"></script>
     </head>
 
+    <style>
+      .SpecificDate{
+        display:none;
+      }
+    </style>
 <body>
  <header class="header-border">
     <div class="header-content">
@@ -37,7 +42,7 @@ header("Location: adminLogin.php");
 	</div>
 
     <?php
-    if(isset($_GET['request']))
+    if(isset($_GET['request']) && !isset($_GET['date']))
     { 
       $value = $_GET['request'];
       if($value == "ASC" || $value == "DESC")
@@ -58,8 +63,35 @@ header("Location: adminLogin.php");
       }
       
     }
+    else if(isset($_GET['date']) && !isset($_GET['request']))
+    {
+      $value = $_GET['date'];
+      $sql = "SELECT * FROM saleorder WHERE _date ='$value'";
+    }else if(isset($_GET['date']) && $_GET['request'])
+    {
+      $value = $_GET['request'];
+      $value2 = $_GET['date'];
+
+      if($value == "ASC" || $value == "DESC")
+        $sql = "SELECT * FROM saleorder WHERE _date ='$value2' ORDER BY _date ".$value ;
+      else
+      {
+        if($value == "Pending")
+        {  
+          $findstatus= 0; $SOption="SelfCollection";
+        }else if($value == "PickUp")
+        {
+          $findstatus= 1; $SOption="SelfCollection";
+        }else if($value == "CourierService")
+        {
+          $findstatus= 1; $SOption="StandaryDelivery";
+        }
+        $sql = "SELECT * FROM saleorder WHERE _status ='$findstatus' AND ShippingOption = '$SOption' AND _date ='$value2'";  
+      }
+    }
     else
       $sql = "SELECT * FROM saleorder";
+
       $result = $conn->query($sql) ;
     ?>
 
@@ -75,24 +107,44 @@ header("Location: adminLogin.php");
       </form>
     </div>
 
+    <div id="SpecificDate" class="SpecificDate" style="float:right;margin-left:10px;">
+      <input type="date" <?php if(isset($_GET['date'])) {?> value=<?php echo $_GET['date'];}?> style="padding:5px;margin-bottom: 25px;border: 2px solid #ff531a;" onchange="specificdate(this)">
+    </div> 
+
     <div id="filters" style="float:right;">
       <select style="padding:5px;margin-bottom: 25px;border: 2px solid #ff531a;" name="sortstatus" id="sortstatus" onchange="sort(this)";>
         <option value="" disabled="" selected="">Select Filter</option>
-        <option value="Pending">Pending Order</option>
-        <option value="PickUp">Picked Up Order</option>
-        <option value="CourierService">Courier Service Order</option>
-        <option value="ASC">Sort By Date (Ascending) </option>
-        <option value="DESC">Sort By Date (Descending) </option>
-        <option value="All">All Order</option>
+        <option value="Pending"<?php if(isset($_GET['request']) && $_GET['request']=="Pending") echo 'selected="selected"';?>>Pending Order</option>
+        <option value="PickUp"<?php if(isset($_GET['request']) && $_GET['request']=="PickUp") echo 'selected="selected"';?>>Picked Up Order</option>
+        <option value="CourierService"<?php if(isset($_GET['request']) && $_GET['request']=="CourierService") echo 'selected="selected"';?>>Courier Service Order</option>
+        <option value="ASC"<?php if(isset($_GET['request']) && $_GET['request']=="ASC") echo 'selected="selected"';?>>Sort By Date (Ascending) </option>
+        <option value="DESC"<?php if(isset($_GET['request']) && $_GET['request']=="DESC") echo 'selected="selected"';?>>Sort By Date (Descending) </option>
+        <option value="Specific" <?php if(isset($_GET['date']) && !isset($_GET['request'])) echo 'selected="selected"';?>>Sort By Specific Date </option>
+        <option value="All"<?php if(isset($_GET['request']) && $_GET['request']=="All") echo 'selected="selected"';?>>All Order</option>
       </select>
     </div>
     <script type="text/javascript">
       function sort(answer){
         if(answer.value == "All")
           window.location="manageProductOrder.php";
+        else if(answer.value == "Specific")
+          document.getElementById("SpecificDate").classList.remove("SpecificDate");
         else
           window.location="manageProductOrder.php?request="+answer.value; 
       }
+
+      function specificdate(answer){
+        <?php if(isset($_GET['request']) ){ ?>
+          var requestvalue = <?php echo json_encode($_GET['request'])?>;
+          window.location="manageProductOrder.php?request="+requestvalue + "&date="+answer.value; 
+        <?php  }else {?>
+          window.location="manageProductOrder.php?date="+answer.value; 
+        <?php }?>
+      }
+
+      <?php if((isset($_GET['request']) && isset($_GET['date'])) || (isset($_GET['date']) && !isset($_GET['request'])) ){ ?>
+        document.getElementById("SpecificDate").classList.remove("SpecificDate");
+      <?php } ?>
 
     </script>
     <table style="width:115%">

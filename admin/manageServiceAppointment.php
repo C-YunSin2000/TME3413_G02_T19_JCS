@@ -14,7 +14,13 @@ header("Location: adminLogin.php");
         <link rel="stylesheet" href="CSS/adminStyle.css">
         <link rel="stylesheet" href="../CSS/footer.css">
         <script src="slides.js"></script>
-    </head>
+
+        <style>
+          .SpecificDate{
+            display:none;
+          }
+        </style>
+</head>
     
 <body>
  <header class="header-border">
@@ -49,25 +55,47 @@ header("Location: adminLogin.php");
       </form>
     </div>
 
+    <div id="SpecificDate" class="SpecificDate" style="float:right;margin-left:10px;">
+      <input type="date" <?php if(isset($_GET['date'])) {?> value=<?php echo $_GET['date'];}?> style="padding:5px;margin-bottom: 25px;border: 2px solid #ff531a;" onchange="specificdate(this)">
+    </div>    
+
     <div id="filters" style="float:right;">
       <select style="padding:5px;margin-bottom: 25px;border: 2px solid #ff531a;" name="sortstatus" id="sortstatus" onchange="sort(this)";>
         <option value="" disabled="" selected="">Select Filter</option>
-        <option value="Upcoming">Upcoming Appointment</option>
-        <option value="Completed">Completed Appointment</option>
-        <option value="Cancelled">Cancelled Appointment</option>
-        <option value="ASC">Sort By Date (Ascending) </option>
-        <option value="DESC">Sort By Date (Descending) </option>
-        <option value="All">All Appointment</option>
+        <option value="Upcoming" <?php if(isset($_GET['request']) && $_GET['request']=="Upcoming"){ echo 'selected="selected"';}?>>Upcoming Appointment</option>
+        <option value="Completed" <?php if(isset($_GET['request']) && $_GET['request']=="Completed"){ echo 'selected="selected"';}?>>Completed Appointment</option>
+        <option value="Cancelled" <?php if(isset($_GET['request']) && $_GET['request']=="Cancelled") {echo 'selected="selected"';}?>>Cancelled Appointment</option>
+        <option value="ASC" <?php if(isset($_GET['request']) && $_GET['request']=="ASC") {echo 'selected="selected"';}?>>Sort By Date (Ascending) </option>
+        <option value="DESC" <?php if(isset($_GET['request']) && $_GET['request']=="DESC") {echo 'selected="selected"';}?>>Sort By Date (Descending) </option>
+        <option value="Specific" <?php if(isset($_GET['date']) && !isset($_GET['request'])) {echo 'selected="selected"';}?>>Sort By Specific Date </option>
+        <option value="All" <?php if(isset($_GET['request']) && $_GET['request']=="All") {echo 'selected="selected"';}?>>All Appointment</option>
       </select>
     </div>
+
+
+    
     <script type="text/javascript">
       function sort(answer){
         if(answer.value == "All")
           window.location="manageServiceAppointment.php";
+        else if(answer.value == "Specific")
+          document.getElementById("SpecificDate").classList.remove("SpecificDate");
         else
-        window.location="manageServiceAppointment.php?request="+answer.value; 
+          window.location="manageServiceAppointment.php?request="+answer.value; 
       }
 
+      function specificdate(answer){
+        <?php if(isset($_GET['request']) ){ ?>
+          var requestvalue = <?php echo json_encode($_GET['request'])?>;
+          window.location="manageServiceAppointment.php?request="+requestvalue + "&date="+answer.value; 
+        <?php  }else {?>
+          window.location="manageServiceAppointment.php?date="+answer.value; 
+        <?php }?>
+      }
+
+      <?php if((isset($_GET['request']) && isset($_GET['date'])) || (isset($_GET['date']) && !isset($_GET['request'])) ){ ?>
+        document.getElementById("SpecificDate").classList.remove("SpecificDate");
+      <?php } ?>
     </script>
     
   
@@ -85,7 +113,7 @@ header("Location: adminLogin.php");
       </tr>
 
       <?php
-      if(isset($_GET['request']))
+      if(isset($_GET['request']) && !isset($_GET['date']))
       { 
         $value = $_GET['request'];
         if($value=="Upcoming" || $value=="Completed" || $value=="Cancelled")
@@ -93,7 +121,19 @@ header("Location: adminLogin.php");
         else
           $sql = "SELECT * FROM appointment ORDER BY appointmentdate ".$value ;
       }
-      else
+      else if(isset($_GET['date']) && !isset($_GET['request']))
+      {
+        $value = $_GET['date'];
+        $sql = "SELECT * FROM appointment WHERE appointmentdate ='$value'";
+      }else if(isset($_GET['date']) && $_GET['request'])
+      {
+        $value = $_GET['request'];
+        $value2 = $_GET['date'];
+        if($value=="Upcoming" || $value=="Completed" || $value=="Cancelled")
+          $sql = "SELECT * FROM appointment WHERE status ='$value' AND appointmentdate ='$value2'";
+        else
+          $sql = "SELECT * FROM appointment WHERE AND appointmentdate ='$value2' ORDER BY appointmentdate ".$value ;
+      }else
             $sql = "SELECT * FROM appointment";
 
             $result = $conn->query($sql) ;
